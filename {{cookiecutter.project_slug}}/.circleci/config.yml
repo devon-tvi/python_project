@@ -1,0 +1,109 @@
+version: 2
+jobs:
+  test:
+    # medium = 2 vCpus, 4g memory
+    resource_class: medium
+    docker:
+      - image: circleci/python:3.6.5
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - v2-dependencies-{{ checksum "requirements/dev.txt" }}-{{ checksum "requirements/prod.txt" }}-{{ checksum "requirements/test.txt" }}
+          # fallback to using the latest cache if no exact match is found
+          - v2-dependencies-
+
+      - run:
+          name: install dependencies
+          command: |
+            # Note: If the apt-get is slow then can separately make an image that includes it.
+            sudo apt-get update
+            python3 -m venv venv --system-site-packages
+            . venv/bin/activate
+
+      - run:
+          name: Run tests
+          command: |
+            . venv/bin/activate
+            pytest --junitxml=test-results/unit-tests/unit-test-results.xml
+
+      - run:
+          name: Run capture tests
+          command: |
+            . venv/bin/activate
+            pytest -m "capture and not recording" -s --junitxml=test-results/unit-tests/unit-test-results-capture.xml
+
+      - run:
+          name: Run pylint checks
+          command: |
+            bin/run_pylint.sh
+
+      - run:
+          name: Run black checks
+          command: |
+            bin/run_black.sh
+
+      - run:
+          name: Run isort checks
+          command: |
+            bin/run_isort.sh
+
+      - store_artifacts:
+          path: test-results/unit-tests/unit-test-results.xml
+          destination: tests
+
+      - store_artifacts:
+          path: test-results/unit-tests/unit-test-results-capture.xml
+          destination: tests
+
+      # the path subdirectory name is used as the name of the test suite
+      - store_test_results:
+          path: test-results
+
+      - save_cache:
+          paths:
+            - ./venv
+          key: v2-dependencies-{{ checksum "requirements.txt" }}-{{ checksum "requirements-dev.txt" }}
+
+  build-image:
+    docker:
+      - image: circleci/python:3.6.4
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+      - setup_remote_docker
+
+      - run:
+          name: build docker image
+          command: |
+            docker login -u ${NEXUS_PYPI_USER} -p ${NEXUS_PYPI_PASSWORD} repository-manager.tvisioninsights.com:5001
+            docker build \
+              -t repository-manager.tvisioninsights.com:5001/tvisioninsights/muninn:0.1.0-circle${CIRCLE_BUILD_NUM} \
+              --build-arg "nexus_pypi_user=${NEXUS_PYPI_USER}" \
+              --build-arg "nexus_pypi_password=${NEXUS_PYPI_PASSWORD}" \
+              .
+            docker logout
+
+      - run:
+          name: push image to nexus
+          command: |
+            docker push repository-manager.tvisioninsights.com:5001/tvisioninsights/muninn:0.1.0-circle${CIRCLE_BUILD_NUM}
+
+workflows:
+  version: 2
+  test-and-build-image:
+    jobs:
+      - test
+      - build-image:
+          filters:
+            branches:
+              only:
+                - master
+          requires:
+            - test
