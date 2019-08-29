@@ -32,14 +32,6 @@ Unit tests located in the `test` directory are automatically run during the CI b
 These scripts make it easier to run tests: `bin/run_tests.sh`, `bin/run_fast_tests.sh`, and for
 pylint: `bin/run_checks.sh`.
 
-A number of test marks are define to allow selecting subsets of the tests. These marks are
-defined in `pytest.ini` and are not run by default (see `bin/run_tests.sh`) in CircleCI. 
-See each marked test for more specific information. 
-
-- `slow` - Tests that take many seconds to run.
-- `camera` - Tests that try to find and access the camera.
-- `visualization` - Tests that require GUI
-- `integration` - Tests that require outside services (databases, TVision APIs)
 
 #### Run a test with debug logging
 
@@ -50,15 +42,6 @@ number for each log statement.
 
 To only run a single test in a file use '::' and the test name after the file name.
 For example: `test/huginn_process/test_process_video.py::test_human_detection_frame_keys`
-
-#### Show statsd metrics being sent
-
-In order to debug what metrics are being sent when it is not convenient to run a `statsd`
-server, run the following program in the background (or in a different shell) before running the
-main program.
-
-    export PYTHONPATH=./src:./test
-    python test/huginn_test/test_statsd.py &
 
 ### Local Linting
 

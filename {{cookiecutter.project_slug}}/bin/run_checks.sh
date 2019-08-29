@@ -1,6 +1,7 @@
 #! /usr/bin/env bash
-# Run all code checks from anywhere in the module hierarchy.
-# Command line parameters are not used.
+
+# Run all code checks to make sure code meets formatting standards.
+# Will exit non-zero if there are errors or improperly formatted code.
 
 set -e
 

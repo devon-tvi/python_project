@@ -1,13 +1,13 @@
 #! /usr/bin/env bash
-# Run pylint - make sure python code is correctly styled
 
-set -e
+# Run pylint - make sure python code is correctly styled, is able to check for things that aren't
+# looked for by black.
+# Will exit non-zero if there are errors or incorrectly formatted python code.
 
-PROJECT_ROOT="$(dirname $0)/.."
-cd "${PROJECT_ROOT}"
 
-LIST=${@:-src test}
-echo "run checks on: ${LIST}"
-export PYTHONPATH=./src:./test # define on separate line, so 'time' bash builtin works in container
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-time pylint --rcfile=.pylintrc ${LIST}
+cd ${DIR}/..
+. venv/bin/activate
+
+time pylint *.py {{cookiecutter.project_slug}}/*/**.py test/**.py

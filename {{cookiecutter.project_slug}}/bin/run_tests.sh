@@ -1,19 +1,10 @@
 #! /usr/bin/env bash
-# Run pytest test cases and doctest tests in docstrings from anywhere in the module hierarchy.
-# First parameter is the test marked expression.
-# This defaults to not run 'camera' and 'visualization' tests.
-# Any additional parameters are passed along to pytest.
 
-set -e
+# Run all pytest unit tests.
+# Will exit non-zero if any unit tests fail unexpectedly.
 
-PROJECT_ROOT="$(dirname $0)/.."
-cd "${PROJECT_ROOT}"
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-TEST_MARKED=${1:-not camera and not visualization and not integration}
-if [ "$1" ]; then shift 1; fi
+cd ${DIR}/..
 
-echo "run tests: ${TEST_MARKED}  $@"
-
-export PYTHONPATH=./src:./test # define on separate line, so 'time' bash builtin works in container
-
-time pytest -m "${TEST_MARKED}" "$@"
+pytest test
