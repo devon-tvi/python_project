@@ -14,12 +14,5 @@ if __name__ == '__main__':
         remove_file('AUTHORS.md')
         remove_file('docs/authors.rst')
 
-    if '{{ cookiecutter.use_pytest }}' == 'y':
-        remove_file('tests/__init__.py')
-
-    if 'no' in '{{ cookiecutter.command_line_interface|lower }}':
-        cli_file = os.path.join('{{ cookiecutter.project_slug }}', 'cli.py')
-        remove_file(cli_file)
-
-    if 'Not open source' == '{{ cookiecutter.open_source_license }}':
-        remove_file('LICENSE')
+    if '{{ cookiecutter.enable_pre_commit_hooks }}' != 'y':
+        remove_file('.pre-commit-config.yaml')

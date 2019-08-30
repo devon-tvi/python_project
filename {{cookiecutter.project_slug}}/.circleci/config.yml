@@ -15,7 +15,7 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-          - v2-dependencies-{{ checksum "./requirements/prod.txt" }}-{{ checksum "./requirements/test.txt" }}
+          - v2-dependencies-{% raw %}{{ checksum "./requirements/prod.txt" }}-{{ checksum "./requirements/test.txt" }}{% endraw %}
           # fallback to using the latest cache if no exact match is found
           - v2-dependencies-
 
@@ -30,7 +30,7 @@ jobs:
       - save_cache:
           paths:
             - ./venv
-          key: v2-dependencies-{{ checksum "./requirements/prod.txt" }}-{{ checksum "./requirements/test.txt" }}
+          key: v2-dependencies-{% raw %}{{ checksum "./requirements/prod.txt" }}-{{ checksum "./requirements/test.txt" }}{% endraw %}
 
       - run:
           name: run tests

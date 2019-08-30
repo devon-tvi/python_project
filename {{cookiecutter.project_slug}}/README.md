@@ -1,54 +1,48 @@
 # {{cookiecutter.project_name}} - {{cookiecutter.project_slug}} 
 
-Should answer:
-
-* Who uses this project?
+Description: {{cookiecutter.project_short_description}}
 
 
 ## Usage
 
+
 ####  Environment variables
+
 
 #### Correct usage
 
+
 #### Incorrect usage
 
+
 ## Getting Started
+
 
 ### Dependencies
 
 See the `requirements` directory for required Python modules for building, testing, developing etc.
 They can be installed in a [virtual environment](https://docs.python.org/3/library/venv.html) using the follow commands:
+
 ```
 python3 -m venv venv
 . venv/bin/activate
 pip install -r requirements/dev.txt requirements/prod.txt requirements/test.txt
 ```
 
+
 ## Testing
 
-Unit tests located in the `test` directory are automatically run during the CI build.
+Unit tests located in the `test` directory are automatically run during the CI build. You
+can run them manually with:
 
-These scripts make it easier to run tests: `bin/run_tests.sh`, `bin/run_fast_tests.sh`, and for
-pylint: `bin/run_checks.sh`.
+```
+./bin/run_tests.sh
+```
 
-
-#### Run a test with debug logging
-
-Here is an example of how to run a test with debug logging. The output will how the source line
-number for each log statement.
-
-    bin/run_tests.sh '' --log-cli-level=debug test/huginn_process/test_process_video.py
-
-To only run a single test in a file use '::' and the test name after the file name.
-For example: `test/huginn_process/test_process_video.py::test_human_detection_frame_keys`
 
 ### Local Linting
 
 To run all local linting at once, use `run_checks.sh`
-
-Or install pre-commit hooks using `pre-commit install`. Then on any commit, all the linting checks will
-run for any files affected by your commit.
 
 Check mode:
 
@@ -85,17 +79,49 @@ isort does not have a plugin, install as external tool:
 https://github.com/timothycrosley/isort/wiki/isort-Plugins
 
 
+{% if cookiecutter.enable_pre_commit_hooks == 'y' %}
+### Using pre-commit
+
+First you need to init the repo as a git repo with:
+
+```
+git init
+```
+
+Then you can set up the git hook scripts with:
+
+```
+pre-commit install
+```
+
+By default:
+
+* black
+* pylint
+* isort
+
+Are all run in check-mode and must pass in order to actually make the commit.
+
+If you'd like skip these checks you can commit with:
+
+```
+git commit --no-verify
+```
+
+If you'd like to quickly run these pre-commit checks on all files (not just the staged ones) you
+can run:
+
+```
+pre-commit run --all-files
+```
+
+
+
+{% endif %}
 ## Contribution guidelines
 
-* See [Guidelines and Values for Engineering Practice](
+* See [TVision Guidelines and Values for Engineering Practice](
 https://tvision.atlassian.net/wiki/spaces/TVIPD/pages/30277643/Guidelines+and+values+for+engineering+practice)
 
-* See [Python Style Guide](
+* See [TVision Python Style Guide](
 https://tvision.atlassian.net/wiki/spaces/TVIPD/pages/821559312/Python+Style+Guide)
-
-* Before you merge a PR, make sure you run the following test command with a webcam plugged in and
-your machine connected to the internet. This will run the fully verbose test suite.
-
-* "If you touch it, type it!". In the ongoing effort to add typing to this project, a rule of thumb 
-is that any function you modify, you must add typing.
-

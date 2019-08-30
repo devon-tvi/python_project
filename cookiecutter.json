@@ -6,5 +6,5 @@
     "project_short_description": "TVision Python Project contains all of the tools you should need to get started on a new project.",
     "version": "0.1.0",
     "create_author_file": "y",
-    "enable pre-commit hooks": "y"
+    "enable_pre_commit_hooks": "y"
 }
