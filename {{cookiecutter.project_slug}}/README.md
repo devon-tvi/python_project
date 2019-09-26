@@ -8,32 +8,45 @@ Description: {{cookiecutter.project_short_description}}
 
 ####  Environment variables
 
+TODO: add if needed
 
 #### Correct usage
 
+With the virtual env activated, run: 
+
+```
+python {{ cookiecutter.project_slug }}.py
+```
 
 #### Incorrect usage
 
+TODO: add if needed
 
 ## Getting Started
 
 
-### Dependencies
+### Python Dependencies
 
 See the `requirements` directory for required Python modules for building, testing, developing etc.
-They can be installed in a [virtual environment](https://docs.python.org/3/library/venv.html) using the follow commands:
+They can all be installed in a [virtual environment](https://docs.python.org/3/library/venv.html) 
+using the follow commands:
 
 ```
 python3 -m venv venv
 . venv/bin/activate
-pip install -r requirements/dev.txt requirements/prod.txt requirements/test.txt
+pip install -r ./requirements/dev.txt -r ./requirements/prod.txt -r ./requirements/test.txt
 ```
 
+There's also a bin script to do this:
+
+```
+./bin/create_venv.sh
+```
 
 ## Testing
 
-Unit tests located in the `test` directory are automatically run during the CI build. You
-can run them manually with:
+This project uses pytest to manage and run unit tests. Unit tests located in the `test` directory 
+are automatically run during the CI build. You can run them manually with:
 
 ```
 ./bin/run_tests.sh
@@ -42,42 +55,27 @@ can run them manually with:
 
 ### Local Linting
 
-To run all local linting at once, use `run_checks.sh`
+There are a few linters/code checks included with this project to speed up the development process:
 
-Check mode:
+* Black - An automatic code formatter, never think about python style again.
+* Isort - Automatically organizes imports in your modules.
+* Pylint - Check your code against many of the python style guide rules.
+* Mypy - Check your code to make sure it is properly typed.
 
-`bin/run_checks.sh`
+You can run these tools automatically in check mode, meaning you will get an error if any of them
+would not pass with:
 
-or
 ```
-bin/run_pylint.sh
-bin/run_black.sh
-bin/run_isort.sh
-```
-
-Auto apply mode:
-Note: Pylint will not automatically fix problems
-
-`bin/apply_linters.sh`
-
-or
-```
-bin/apply_black.sh
-bin/apply_isort.sh
+./bin/run_checks.sh
 ```
 
+Or actually automatically apply the fixes with:
 
-Pycharm pylint plugin: https://plugins.jetbrains.com/plugin/11084-pylint
+```
+./bin/apply_linters.sh
+```
 
-Pycharm black plugin: https://plugins.jetbrains.com/plugin/10563-black-pycharm
-
-Alternatively pylint and black can be setup using external tools, or with file watchers see:
-http://pylint.pycqa.org/en/stable/user_guide/ide-integration.html#using-external-tools
-https://github.com/ambv/black/blob/master/README.md#pycharmintellij-idea
-
-isort does not have a plugin, install as external tool:
-https://github.com/timothycrosley/isort/wiki/isort-Plugins
-
+There are also scritps in `./bin/` that include run/check for each individual tool.
 
 {% if cookiecutter.enable_pre_commit_hooks == 'y' %}
 ### Using pre-commit
@@ -99,8 +97,9 @@ By default:
 * black
 * pylint
 * isort
+* mypy
 
-Are all run in check-mode and must pass in order to actually make the commit.
+Are all run in apply-mode and must pass in order to actually make the commit.
 
 If you'd like skip these checks you can commit with:
 
@@ -114,14 +113,7 @@ can run:
 ```
 pre-commit run --all-files
 ```
-
-
-
 {% endif %}
-## Contribution guidelines
 
-* See [TVision Guidelines and Values for Engineering Practice](
-https://tvision.atlassian.net/wiki/spaces/TVIPD/pages/30277643/Guidelines+and+values+for+engineering+practice)
 
-* See [TVision Python Style Guide](
-https://tvision.atlassian.net/wiki/spaces/TVIPD/pages/821559312/Python+Style+Guide)
+### Continuous Integration with CircleCi

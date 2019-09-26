@@ -9,4 +9,4 @@ cd ${DIR}/..
 . venv/bin/activate
 
 seed-isort-config --exclude venv
-time isort -c
+time isort -c --skip=./venv/

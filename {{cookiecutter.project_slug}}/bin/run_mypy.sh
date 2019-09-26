@@ -8,4 +8,4 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 cd ${DIR}/..
 . venv/bin/activate
 
-time mypy . test {{cookiecutter.project_slug}}
+time mypy test {{cookiecutter.project_slug}}

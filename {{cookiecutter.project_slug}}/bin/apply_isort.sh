@@ -7,5 +7,5 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 cd ${DIR}/..
 . venv/bin/activate
 
-seed-isort-config --exclude venv
-isort -y
+seed-isort-config --exclude=venv
+isort -y --skip=./venv/
